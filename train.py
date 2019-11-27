@@ -14,9 +14,28 @@ import argparse
 
 def main():
     
+    # Start with CPU
+    device = torch.device("cpu")
+
+    # Requested GPU
+    if input_args.gpu:
+        device = torch.device("cuda:0")    
+
     device = torch.device("cuda:0" if (torch.cuda.is_available() and gpu) else "cpu") 
     
     print_every = 40
+
+    #Arguments
+    input= getargs()
+
+    data_dir= input.data_dir
+    save_dir= input.save_dir
+    arch= input.arch
+    learning_rate= input.learning_rate
+    hidden_layers= input.hidden_layers
+    epochs= input.epochs
+    gpu= input.gpu
+    dropout= input.dropout
 
     #Pulls in and transforms data'
     train_dir = data_dir + '/train'
@@ -39,23 +58,20 @@ def main():
     model_train(model, epochs, trainloader, criterion, optimizer, device)
     save_checkpoint(arch, save_dir, input_size, output_size, hidden_units, dropout, epochs, learning_rate, optimizer)
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='Train an image classifier',
-    )
-    
-    parser.add_argument('data_dir', default='flowers')
-    parser.add_argument('save_dir', default='.')
-    parser.add_argument('arch', default='vgg16')
-    parser.add_argument('learning_rate', default=0.001, type=float)
-    parser.add_argument('hidden_layers', default=[1024, 256])
-    parser.add_argument('epochs', default=5, type=int)
-    parser.add_argument('gpu', action='store_true', default=True)
-    parser.add_argument('dropout', type=float, default=0.5, help='Determines probability rate for dropouts')
-    input_args = parser.parse_args()
+def getargs():
 
-    main(input_args.data_dir, input_args.save_dir, input_args.arch,
-         input_args.learning_rate, input_args.hidden_layers, input_args.epochs, input_args.gpu, input_args.dropout)
+    #Inputing the parameters
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_dir', default='flowers')
+    parser.add_argument('--save_dir', default='.')
+    parser.add_argument('--arch', default='vgg16')
+    parser.add_argument('--learning_rate', default=0.001, type=float)
+    parser.add_argument('--hidden_layers', default=[1024, 256])
+    parser.add_argument('--epochs', default=5, type=int)
+    parser.add_argument('--gpu', action='store_true')
+    parser.add_argument('--dropout', type=float, default=0.5, help='Determines probability rate for dropouts')
+
+    return parser.parse_args()
 
 
 def process_data(data_dir, valid_dir, test_dir):

@@ -39,11 +39,11 @@ if __name__ == '__main__':
         description='Predict an image class using classfier',
     )
     
-    parser.add_argument('image_path', default='flowers/train/47/image_04985.jpg')
-    parser.add_argument('checkpoint', default='checkpoint.pth')
-    parser.add_argument('top_k', default=1, type=int)
-    parser.add_argument('category_names', default='cat_to_name.json')
-    parser.add_argument('gpu', action='store_true')
+    parser.add_argument('--image_path', default='flowers/train/47/image_04985.jpg')
+    parser.add_argument('--checkpoint', default='checkpoint.pth')
+    parser.add_argument('--top_k', default=1, type=int)
+    parser.add_argument('--category_names', default='cat_to_name.json')
+    parser.add_argument('--gpu', action='store_true')
     input_args = parser.parse_args()
 
     classes, probs = main(input_args.image_path, input_args.checkpoint, input_args.top_k,
